@@ -6,7 +6,6 @@
 2. Create new Web Service → Connect this repo/zip → Node.js
 3. Build command: npm install
 4. Start command: npm start
-5. After deploy, your site will be live (e.g., https://kesar-restaurant.onrender.com).
 
 ## Deploy on Heroku
 1. Install Heroku CLI and login.
