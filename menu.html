@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kesar Menu - Order Online</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: #fafafa;
+    }
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    .menu-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .item-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .item-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+    .item-card h3 {
+      margin: 10px 0;
+    }
+    form {
+      padding: 15px;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      background: #27ae60;
+      color: white;
+      font-size: 16px;
+      border: none;
+    }
+    button:hover {
+      background: #219150;
+    }
+  </style>
+  <script>
+    async function sendOrder(event, item) {
+      event.preventDefault();
+
+      const order = {
+        name: document.getElementById("name").value,
+        table: document.getElementById("table").value,
+        item: item
+      };
+
+      try {
+        const res = await fetch("/order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(order)
+        });
+        const data = await res.json();
+        alert(data.message || "✅ Order sent!");
+      } catch (err) {
+        alert("❌ Failed to send order: " + err.message);
+      }
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <h1>🍽️ Kesar Menu</h1>
+    <p>Order directly to Telegram</p>
+  </header>
+
+  <div style="padding:20px;">
+    <form>
+      <label><b>Name:</b></label>
+      <input type="text" id="name" required>
+
+      <label><b>Table Number:</b></label>
+      <input type="text" id="table" required>
+    </form>
+  </div>
+
+  <div class="menu-container">
+    <div class="item-card">
+      <img src="https://images.unsplash.com/photo-1604908177225-055f8131d54b" alt="Chicken Momo">
+      <h3>Chicken Momo</h3>
+      <button onclick="sendOrder(event, 'Chicken Momo')">Order Now</button>
+    </div>
+
+    <div class="item-card">
+      <img src="https://images.unsplash.com/photo-1599974579688-8c1e3a3e00c7" alt="Paneer Tikka">
+      <h3>Paneer Tikka</h3>
+      <button onclick="sendOrder(event, 'Paneer Tikka')">Order Now</button>
+    </div>
+
+    <div class="item-card">
+      <img src="https://images.unsplash.com/photo-1625943541172-1e6e9e9133bc" alt="Buff Sukuti">
+      <h3>Buff Sukuti</h3>
+      <button onclick="sendOrder(event, 'Buff Sukuti')">Order Now</button>
+    </div>
+  </div>
+</body>
+</html>

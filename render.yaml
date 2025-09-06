@@ -1,0 +1,8 @@
+
+services:
+  - type: web
+    name: kesar-telegram-order
+    env: node
+    plan: free
+    buildCommand: "npm install"
+    startCommand: "npm start"
