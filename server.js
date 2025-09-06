@@ -1,32 +1,43 @@
-
 const express = require("express");
+const bodyParser = require("body-parser");
 const axios = require("axios");
 const path = require("path");
 
 const app = express();
-app.use(express.json());
+const PORT = process.env.PORT || 3000;
 
-// Telegram Bot credentials
-const BOT_TOKEN = "8267444065:AAGt7byl-yYmt57i2i525Pl5V1nq__2-2Ck";
-const CHAT_ID = "8200996015";
+// Middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// Serve static files (menu.html)
-app.use(express.static(path.join(__dirname, "public")));
+// Serve menu.html at root
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "menu.html"));
+});
 
+// Handle order POST request
 app.post("/order", async (req, res) => {
   const { name, table, item } = req.body;
-  const msg = `🍽️ New Order\n👤 Name: ${name}\n🪑 Table: ${table}\n🛒 Item: ${item}`;
+
+  const botToken = "8267444065:AAGt7byl-yYmt57i2i525Pl5V1nq__2-2Ck";
+  const chatId = "8200996015";
+  const message = `🍽️ New Order!\n\n👤 Name: ${name}\n🪑 Table: ${table}\n🍴 Item: ${item}`;
 
   try {
-    await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      chat_id: CHAT_ID,
-      text: msg,
+    await axios.post(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      chat_id: chatId,
+      text: message,
     });
-    res.json({ success: true, message: "Order sent to Telegram!" });
+
+    res.send("✅ Order placed successfully!");
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    res.status(500).send("❌ Failed to send order to Telegram.");
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+// Start server
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+});
+
